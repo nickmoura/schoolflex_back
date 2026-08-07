@@ -1,0 +1,44 @@
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Escola {
+  id        String    @id @default(uuid())
+  nome      String
+  cnpj      String    @unique
+  ativo     Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  usuarios  Usuario[]
+
+  @@map("escolas")
+}
+
+model Perfil {
+  id        Int       @id @default(autoincrement())
+  nome      String    @unique
+  usuarios  Usuario[]
+
+  @@map("perfis")
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  escolaId  String   @map("escola_id")
+  perfilId  Int      @map("perfil_id")
+  nome      String
+  email     String   @unique
+  senhaHash String   @map("senha_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  escola    Escola   @relation(fields: [escolaId], references: [id], onDelete: Cascade)
+  perfil    Perfil   @relation(fields: [perfilId], references: [id])
+
+  @@map("usuarios")
+}
