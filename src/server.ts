@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { escolaRoutes } from './presentation/routes/escola.routes';
 
 const app = express();
 
@@ -7,8 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/health', (req, res) => {
-  return res.json({ status: 'OK', message: 'API SchoolFlex rodando!' });
+  res.json({ status: 'OK', message: 'Servidor SchoolFlex rodando!' });
 });
+
+app.use('/api', escolaRoutes);
 
 const PORT = process.env.PORT || 3300;
 
