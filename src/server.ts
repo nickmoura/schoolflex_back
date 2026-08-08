@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { escolaRoutes } from './presentation/routes/escola.routes';
+import { authRoutes } from './presentation/routes/auth.routes';
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api', escolaRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3300;
 
