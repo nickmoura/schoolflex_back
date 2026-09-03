@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CadastrarEscolaUseCase } from './CadastrarEscolaUseCase';
-import { InMemoryEscolaRepository } from '../../tests/repositories/InMemoryEscolaRepository';
+import { InMemoryEscolaRepository } from '../../tests/InMemoryEscolaRepository';
 
 describe('CadastrarEscolaUseCase', () => {
   let escolaRepository: InMemoryEscolaRepository;
@@ -17,7 +17,7 @@ describe('CadastrarEscolaUseCase', () => {
       cnpj: '12345678000195',
       adminNome: 'Diretor Silva',
       adminEmail: 'diretor@escola.com',
-      adminSenha: 'senhaSegura123',
+      senhaAdmin: 'senhaSegura123',
     });
 
     expect(resultado).toHaveProperty('escola');
