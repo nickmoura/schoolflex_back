@@ -12,7 +12,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Servidor SchoolFlex rodando!' });
 });
 
-app.use('/api', escolaRoutes);
+app.use('/escolas', escolaRoutes);
 app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3300;

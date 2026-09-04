@@ -1,5 +1,5 @@
 import { prisma } from '../../../config/prisma'; // Ou o caminho para o seu singleton do prisma
-import { IEscolaRepository, CriarEscolaDTO } from '../../../domain/repositories/IEscolaRepository';
+import { IEscolaRepository, CriarEscolaDTO, ListarEscolasResultado, ListarEscolasParams } from '../../../domain/repositories/IEscolaRepository';
 
 export class PrismaEscolaRepository implements IEscolaRepository {
   async buscarPorEmailAdmin(email: string) {
@@ -38,5 +38,43 @@ export class PrismaEscolaRepository implements IEscolaRepository {
         usuarios: true,
       },
     });
+  }
+  async listar({ page = 1, limit = 10, search }: ListarEscolasParams): Promise<ListarEscolasResultado> {
+    const skip = (page - 1) * limit;
+
+    const where = search
+      ? {
+        OR: [
+          { nome: { contains: search } },
+          { cnpj: { contains: search } },
+        ],
+      }
+      : {};
+
+    const [escolas, total] = await Promise.all([
+      prisma.escola.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          nome: true,
+          cnpj: true,
+          ativo: true,
+          createdAt: true,
+        },
+      }),
+      prisma.escola.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      escolas,
+      total,
+      page,
+      totalPages,
+    };
   }
 }

@@ -9,6 +9,33 @@ export class InMemoryEscolaRepository implements IEscolaRepository {
     return usuario || null;
   }
 
+  async listar({ page = 1, limit = 10, search }: ListarEscolasParams): Promise<ListarEscolasResultado> {
+    let escolasFiltradas = this.escolas;
+
+    // Aplica o filtro de busca se enviado
+    if (search) {
+      const termo = search.toLowerCase();
+      escolasFiltradas = this.escolas.filter(
+        (escola) =>
+          escola.nome.toLowerCase().includes(termo) ||
+          escola.cnpj.includes(termo)
+      );
+    }
+
+    // Aplica a paginação simulada em memória
+    const total = escolasFiltradas.length;
+    const startIndex = (page - 1) * limit;
+    const paginadas = escolasFiltradas.slice(startIndex, startIndex + limit);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      escolas: paginadas,
+      total,
+      page,
+      totalPages,
+    };
+  }
+
   async criarComAdmin(dados: CriarEscolaDTO) {
     const novaEscola = {
       id: 'escola-1',

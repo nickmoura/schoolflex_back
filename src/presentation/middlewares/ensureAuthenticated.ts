@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -21,7 +22,7 @@ export function ensureAuthenticated(
   const [, token] = authHeader.split(' ');
 
   try {
-    const secret = process.env.JWT_SECRET || 'default_secret';
+    const secret = process.env.JWT_SECRET || 'fallback_secret';
     const decoded = jwt.verify(token, secret) as IPayload;
 
     // Injeta as informações extraídas do Token na Requisição
